@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: min-content;
+}
+
+.judul-login {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 35px;
+    color: lightskyblue;
+}
+
+.formLogin input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 350px;
+    outline: none;
+    letter-spacing: 1px;
+    font-size: 15px;
+}
+
+.btn-login {
+    padding: 10px;
+    background-color: lightskyblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 150px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.btn-login:hover {
+    background-color: deepskyblue;
+}
+
+p {
+    margin-top: 10px;
+    text-align: center;
+}
+
+a {
+    color: lightskyblue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
