@@ -19,6 +19,68 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Dashboard</title>
         <link rel="stylesheet" href="../../css/dashboard.css">
+        <style>
+            .modal {
+                display: none; 
+                position: fixed; 
+                z-index: 1; 
+                left: 0;
+                top: 0;
+                width: 100%; 
+                height: 100%; 
+                overflow: auto; 
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto; 
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%; 
+                max-width: 500px; 
+                text-align: center;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                transform: translateY(-50px);
+                opacity: 0;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+
+            .modal.show .modal-content {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .btn-modal {
+                padding: 10px 15px;
+                font-size: 16px;
+                background-color: #2a2185;
+                color: white; 
+                border: none; 
+                border-radius: 5px;
+                cursor: pointer;
+                width: 100px;
+            }
+
+            .btn-modal:hover {
+                background-color: #1c1a6a;
+            }
+        </style>
     </head>
 
     <body>
@@ -27,10 +89,7 @@
                 <ul>
                     <li>
                         <a href="#">
-                            <span class="icon">
-                                <ion-icon name="logo-apple"></ion-icon>
-                            </span>
-                            <span class="title">Nama Aplikasi</span>
+                            <span class="title">Aplikasi CRUD Inventory Asset</span>
                         </a>
                     </li>
 
@@ -80,7 +139,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../user">
                             <span class="icon">
                                 <ion-icon name="people-outline"></ion-icon>
                             </span>
@@ -98,7 +157,7 @@
                     </li>
 
                     <li>
-                        <a href="../logout">
+                        <a href="#" id="showModal">
                             <span class="icon">
                                 <ion-icon name="log-out-outline"></ion-icon>
                             </span>
@@ -117,10 +176,63 @@
             </div>
         </div>
 
+        <div id="alertModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Pemberitahuan</h2><br>
+                <p>
+                    Apakah anda ingin Log Out dari Aplikasi ini?
+                </p><br>
+                <button id="btnYa" class="btn-modal">Ya</button>
+                <button id="btnTidak" class="btn-modal">Tidak</button>
+            </div>
+        </div>
+
         <script src="../../js/script.js"></script>
 
         <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+        <script>
+            const modal = document.getElementById("alertModal");
+            const btn = document.getElementById("showModal");
+            const span = document.getElementsByClassName("close")[0];
+            const btnTidak = document.getElementById("btnTidak");
+            const btnYa = document.getElementById("btnYa");
+
+            btn.onclick = function() {
+                modal.style.display = "block";
+                setTimeout(() => {
+                    modal.classList.add("show");
+                }, 10);
+            }
+
+            span.onclick = function() {
+                closeModal();
+            }
+
+            btnTidak.onclick = function() {
+                closeModal();
+            }
+
+            btnYa.onclick = function() {
+                window.location.href = "../logout";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    closeModal();
+                }
+            }
+
+            function closeModal() {
+                modal.classList.remove("show");
+                setTimeout(() => {
+                    modal.style.display = "none";
+                }, 300);
+            }
+        </script>
+
     </body>
 
 </html>

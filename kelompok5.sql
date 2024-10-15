@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 14 Okt 2024 pada 06.52
+-- Waktu pembuatan: 15 Okt 2024 pada 15.25
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -40,6 +40,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `nohp`, `filefoto`) VALUES
+(3539, 'dewadsc', '$2y$10$z9XzWhwQOvcybxzgsGok2uZmQyunxXf.0smpRAqXqF1wpj202fVn6', '085215636662', 'dewa_1728897945.jpeg'),
 (7349, 'kelompok5', '$2y$10$489RU8yISKTAGfGwVSrMb.7s3UicZQpMi6kU7uSVhQgtPgHinE48S', '021', 'user_670c9944cc0016.43300786.jpg');
 
 --

@@ -14,6 +14,7 @@
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch();
+    $updateSuccess = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $username = sanitizeInput($_POST['username']);
@@ -29,8 +30,8 @@
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
-            $allowedfileExtensions = array('jpg', 'jpeg', 'png');
-            $allowedMimeTypes = array('image/jpeg', 'image/png');
+            $allowedfileExtensions = ['jpg', 'jpeg', 'png'];
+            $allowedMimeTypes = ['image/jpeg', 'image/png'];
 
             if (in_array($fileExtension, $allowedfileExtensions) && in_array($fileType, $allowedMimeTypes) && $fileSize < 5000000) {
                 $newFileName = uniqid('user_', true) . '.' . $fileExtension;
@@ -50,9 +51,7 @@
         $stmt = $pdo->prepare("UPDATE users SET username = ?, password = ?, nohp= ?, filefoto = ? WHERE id = ?");
         $stmt->execute([$username, $password, $nohp, $filefoto, $_SESSION['user_id']]);
 
-        echo "Akun berhasil diperbarui.";
-        header('Location: index.php');
-        exit;
+        $updateSuccess = true;
     }
 ?>
 
@@ -63,7 +62,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Akun Saya</title>
+        <title>Edit Akun Saya</title>
         <link rel="stylesheet" href="../../css/dashboard.css">
         <style>
             body {
@@ -164,6 +163,61 @@
                 background-color: #1e1a6d;
                 transform: translateY(-2px);
             }
+
+            .modal {
+                display: none; 
+                position: fixed; 
+                z-index: 1; 
+                left: 0;
+                top: 0;
+                width: 100%; 
+                height: 100%; 
+                overflow: auto; 
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto; 
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%; 
+                max-width: 500px; 
+                text-align: center;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                transform: translateY(-50px);
+                opacity: 0;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+            .modal.show .modal-content {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .btn-modal {
+                padding: 10px 15px;
+                font-size: 16px;
+                background-color: #2a2185;
+                color: white; 
+                border: none; 
+                border-radius: 5px;
+                cursor: pointer;
+                width: 100px;
+            }
+            .btn-modal:hover {
+                background-color: #1c1a6a;
+            }
         </style>
     </head>
 
@@ -173,7 +227,7 @@
                 <ul>
                     <li>
                         <a href="#">
-                            <span class="title">Aplikasi Kelompok 5</span>
+                            <span class="title">Aplikasi CRUD Inventory Asset</span>
                         </a>
                     </li>
 
@@ -223,7 +277,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../user">
                             <span class="icon">
                                 <ion-icon name="people-outline"></ion-icon>
                             </span>
@@ -241,7 +295,7 @@
                     </li>
 
                     <li>
-                        <a href="../logout">
+                        <a href="#" id="showModal">
                             <span class="icon">
                                 <ion-icon name="log-out-outline"></ion-icon>
                             </span>
@@ -302,9 +356,85 @@
             </div>
         </div>
 
+        <div id="successModal" class="modal" style="display: <?php echo $updateSuccess ? 'block' : 'none'; ?>">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Pemberitahuan</h2><br>
+                <p>Akun berhasil diperbarui.</p><br>
+                <button id="btnClose" class="btn-modal">Tutup</button>
+            </div>
+        </div>
+
+        <div id="alertModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Pemberitahuan</h2><br>
+                <p>Apakah anda ingin Log Out dari Aplikasi ini?</p><br>
+                <button id="btnYa" class="btn-modal">Ya</button>
+                <button id="btnTidak" class="btn-modal">Tidak</button>
+            </div>
+        </div>
+
         <script src="../../js/script.js"></script>
         <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+        <script>
+            const successModal = document.getElementById("successModal");
+            const alertModal = document.getElementById("alertModal");
+            const btn = document.getElementById("showModal");
+            const span = document.getElementsByClassName("close");
+            const btnClose = document.getElementById("btnClose");
+            const btnTidak = document.getElementById("btnTidak");
+            const btnYa = document.getElementById("btnYa");
+
+            if (successModal.style.display === "block") {
+                setTimeout(() => {
+                    successModal.classList.add("show");
+                }, 10);
+            }
+
+            btn.onclick = function() {
+                alertModal.style.display = "block";
+                setTimeout(() => {
+                    alertModal.classList.add("show");
+                }, 10);
+            }
+
+            for (let closeBtn of span) {
+                closeBtn.onclick = function() {
+                    closeModal(alertModal);
+                }
+            }
+
+            btnClose.onclick = function() {
+                window.location.href = "index.php";
+            }
+
+            btnTidak.onclick = function() {
+                closeModal(alertModal);
+            }
+
+            btnYa.onclick = function() {
+                window.location.href = "../logout";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == alertModal) {
+                    closeModal(alertModal);
+                } else if (event.target == successModal) {
+                    closeModal(successModal);
+                }
+            }
+
+            function closeModal(modal) {
+                modal.classList.remove("show");
+                setTimeout(() => {
+                    modal.style.display = "none";
+                }, 300);
+            }
+        </script>
+
     </body>
 
 </html>
