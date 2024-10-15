@@ -83,10 +83,10 @@ Kami dari kelompok 5 yang terdiri dari
 1. Yogi Anggara
 2. Syamsul Rizal
 3. Dewa Buana Irawan
-4. Zulahmadi Rumakur
+4. Julahmadi Rumakur
 5. Yella Agustin
 6. Ardiyanto
-7. Kristin Herawati
+7. Christy Septian Sinaga
 
 ### Top contributors:
 
