@@ -15,64 +15,15 @@
     $modalSuccess = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = sanitizeInput($_POST['username']);
-        $nohp = sanitizeInput($_POST['nohp']);
+        $namaCostumer = sanitizeInput($_POST['namaCostumer']);
+        $alamatCostumer = sanitizeInput($_POST['alamatCostumer']);
+        $nohpCostumer = sanitizeInput($_POST['nohpCostumer']);
         $id = rand(1, 9999);
-        $password = password_hash(sanitizeInput($_POST['password']), PASSWORD_DEFAULT);
-
-        if (!validateCsrfToken($_POST['csrf_token'])) {
-            die('CSRF token validation failed');
-        }
-
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        $usernameExists = $stmt->fetchColumn();
-
-        if ($usernameExists > 0) {
-            $modalMessage = "Username sudah digunakan, silakan pilih username lain.";
-        } else {
-            $targetDir = "../../imgs/";
-            $imageFileType = strtolower(pathinfo($_FILES["filefoto"]["name"], PATHINFO_EXTENSION));
-
-            $newFileName = $username . '_' . time() . '.' . $imageFileType;
-            $targetFile = $targetDir . $newFileName;
-
-            $uploadOk = 1;
-
-            if (isset($_POST["submit"])) {
-                $check = getimagesize($_FILES["filefoto"]["tmp_name"]);
-                if ($check !== false) {
-                    $uploadOk = 1;
-                } else {
-                    $modalMessage = "File bukan gambar.";
-                    $uploadOk = 0;
-                }
-            }
-
-            if ($_FILES["filefoto"]["size"] > 500000) { 
-                $modalMessage = "Maaf, ukuran file terlalu besar.";
-                $uploadOk = 0;
-            }
-
-            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
-                $modalMessage = "Maaf, hanya file JPG, JPEG & PNG yang diizinkan.";
-                $uploadOk = 0;
-            }
-
-            if ($uploadOk == 0) {
-                $modalMessage = "Maaf, file tidak ter-upload.";
-            } else {
-                if (move_uploaded_file($_FILES["filefoto"]["tmp_name"], $targetFile)) {
-                    $stmt = $pdo->prepare("INSERT INTO users (id, username, password, nohp, filefoto) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$id, $username, $password, $nohp, $newFileName]);
-                    $modalSuccess = true;
-                    $modalMessage = "Pengguna berhasil ditambahkan.";
-                } else {
-                    $modalMessage = "Maaf, terjadi kesalahan saat meng-upload file.";
-                }
-            }
-        }
+        
+        $stmt = $pdo->prepare("INSERT INTO costumer (idCostumer, namaCostumer, nohpCostumer, alamatCostumer) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$id, $namaCostumer, $nohpCostumer, $alamatCostumer]);
+        $modalSuccess = true;
+        $modalMessage = "Data costumer berhasil di tambahkan.";
     }
 
     $csrf_token = generateCsrfToken();
@@ -85,7 +36,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tambahkan Akun Baru</title>
+        <title>Tambahkan Data Costumer</title>
         <link rel="stylesheet" href="../../css/dashboard.css">
         <style>
             body {
@@ -155,7 +106,8 @@
             }
             input[type="text"],
             input[type="password"],
-            input[type="file"] {
+            input[type="file"],
+            textarea {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #2a2185;
@@ -167,7 +119,8 @@
             }
             input[type="text"]:focus,
             input[type="password"]:focus,
-            input[type="file"]:focus {
+            input[type="file"]:focus,
+            textarea:focus {
                 border-color: #1e1a6d;
                 background-color: #e6f0ff;
             }
@@ -270,7 +223,7 @@
                     </li>
 
                     <li>
-                        <a href="../costumer">
+                        <a href="index.php">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -306,7 +259,7 @@
                     </li>
 
                     <li>
-                        <a href="index.php">
+                        <a href="../user">
                             <span class="icon">
                                 <ion-icon name="people-outline"></ion-icon>
                             </span>
@@ -344,7 +297,7 @@
                 <div class="details">
                     <div class="recentOrders">
                         <div class="cardHeader">
-                            <h2>Tambahkan Akun Baru</h2>
+                            <h2>Tambahkan Data Costumer</h2>
                             <a href="index.php" class="back-button">
                                 <ion-icon style="font-size: 1.75rem;" name="arrow-undo-circle-outline"></ion-icon>
                             </a>
@@ -354,39 +307,25 @@
                             <form method="POST" action="" enctype="multipart/form-data">
                                 <div class="info-container">
                                     <div class="info-item">
-                                        <label class="label">Username</label>
-                                        <input type="text" name="username" required placeholder="Username">
+                                        <label class="label">Nama Costumer</label>
+                                        <input type="text" name="namaCostumer" required placeholder="Nama Costumer">
                                     </div>
                                     <div class="info-item">
-                                        <label class="label">Password</label>
-                                        <input type="password" name="password" required placeholder="Password">
+                                        <label class="label">No Hp Costumer</label>
+                                        <input type="text" name="nohpCostumer" required placeholder="No Hp Costumer">
                                     </div>
                                     <div class="info-item">
-                                        <label class="label">Foto</label>
-                                        <input type="file" name="filefoto" accept="image/*" required>
-                                    </div>
-                                    <div class="info-item">
-                                        <label class="label">No Telp</label>
-                                        <input type="text" name="nohp" inputmode="numeric" required placeholder="No HP">
-                                        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                                        <label class="label">Alamat Costumer</label>
+                                        <textarea name="alamatCostumer" placeholder="Alamat Costumer" style="height: 150px; resize: none;"></textarea>
                                     </div>
                                 </div>
                                 <center>
-                                    <button type="submit" class="btn-input-profile">Input</button>
+                                    <button type="submit" class="btn-input-profile">Save Now</button>
                                 </center>
                             </form>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div id="usernameModal" class="modal <?php echo ($modalMessage && !$modalSuccess) ? 'show' : ''; ?>">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal('usernameModal')">&times;</span>
-                <h2>Pemberitahuan</h2><br>
-                <p><?php echo $modalMessage; ?></p><br>
-                <button class="btn-modal" onclick="closeModal('usernameModal')">Tutup</button>
             </div>
         </div>
 
@@ -415,8 +354,7 @@
 
             window.onload = function() {
                 if ('<?php echo $modalMessage; ?>' !== '') {
-                    const modalId = '<?php echo $modalSuccess ? 'successModal' : 'usernameModal'; ?>';
-                    const modal = document.getElementById(modalId);
+                    const modal = document.getElementById('successModal');
                     modal.style.display = "block";
                     setTimeout(() => {
                         modal.classList.add("show");

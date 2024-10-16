@@ -103,7 +103,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../costumer">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -171,6 +171,47 @@
                 <div class="topbar">
                     <div class="toggle">
                         <ion-icon name="menu-outline"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <div class="recentCustomers">
+                        <div class="cardHeader">
+                            <h2>Daftar Costumer</h2>
+                        </div>
+
+                        <?php
+                            require '../../config.php';
+
+                            try {
+                                $perintahCostumer = $pdo->prepare("SELECT idCostumer, namaCostumer, nohpCostumer, alamatCostumer FROM costumer");
+                                $perintahCostumer->execute();
+
+                                $costumers = $perintahCostumer->fetchAll(PDO::FETCH_ASSOC);
+                                $no = 1;
+
+                            } catch (PDOException $e) {
+                                error_log("Database error: " . $e->getMessage());
+                                echo "Terjadi kesalahan. Silakan coba lagi nanti.";
+                                exit();
+                            }
+                        ?>
+
+                        <table>
+                            <?php if ($costumers): ?>
+                                <?php foreach ($costumers as $costumer): ?>
+                                    <tr>
+                                        <td>
+                                            <h4><?php echo htmlspecialchars($costumer['namaCostumer']); ?> <br> <span><?php echo htmlspecialchars($costumer['nohpCostumer']); ?></span></h4>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="5">Tidak ada data pengguna.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </table>
                     </div>
                 </div>
             </div>

@@ -9,6 +9,7 @@
     }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,34 +17,28 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Akun User</title>
+        <title>Costumer</title>
         <link rel="stylesheet" href="../../css/dashboard.css">
         <style>
-            .profile-img {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-            }
-
             .modal {
-                display: none;
-                position: fixed;
-                z-index: 1;
+                display: none; 
+                position: fixed; 
+                z-index: 1; 
                 left: 0;
                 top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
+                width: 100%; 
+                height: 100%; 
+                overflow: auto; 
                 background-color: rgba(0, 0, 0, 0.5);
             }
 
             .modal-content {
                 background-color: #fefefe;
-                margin: 15% auto;
+                margin: 15% auto; 
                 padding: 20px;
                 border: 1px solid #888;
-                width: 80%;
-                max-width: 500px;
+                width: 80%; 
+                max-width: 500px; 
                 text-align: center;
                 border-radius: 10px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -75,8 +70,8 @@
                 padding: 10px 15px;
                 font-size: 16px;
                 background-color: #2a2185;
-                color: white;
-                border: none;
+                color: white; 
+                border: none; 
                 border-radius: 5px;
                 cursor: pointer;
                 width: 100px;
@@ -108,7 +103,7 @@
                     </li>
 
                     <li>
-                        <a href="../costumer">
+                        <a href="#">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -144,7 +139,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../user">
                             <span class="icon">
                                 <ion-icon name="people-outline"></ion-icon>
                             </span>
@@ -162,7 +157,7 @@
                     </li>
 
                     <li>
-                        <a href="#" id="showLogoutModal">
+                        <a href="#" id="showModal">
                             <span class="icon">
                                 <ion-icon name="log-out-outline"></ion-icon>
                             </span>
@@ -182,7 +177,7 @@
                 <div class="details" style="display: block;">
                     <div class="recentOrders">
                         <div class="cardHeader">
-                            <h2>Semua Akun User</h2>
+                            <h2>Data Costumer</h2>
                             <a href="input.php">
                                 <ion-icon style="font-size: 1.75rem;" name="add-circle-outline"></ion-icon>
                             </a>
@@ -198,7 +193,7 @@
                             }
 
                             try {
-                                $stmt = $pdo->prepare("SELECT id, username, nohp, filefoto FROM users");
+                                $stmt = $pdo->prepare("SELECT idCostumer, namaCostumer, nohpCostumer, alamatCostumer FROM costumer");
                                 $stmt->execute();
 
                                 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -215,9 +210,9 @@
                             <thead>
                                 <tr>
                                     <td>No</td>
-                                    <td>Username</td>
-                                    <td>No HP</td>
-                                    <td>Foto</td>
+                                    <td>Nama</td>
+                                    <td>NoHP</td>
+                                    <td>Alamat</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
@@ -226,13 +221,11 @@
                                     <?php foreach ($users as $user): ?>
                                         <tr>
                                             <td><?php echo $no++ ?></td>
-                                            <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                            <td><?php echo htmlspecialchars($user['nohp']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['namaCostumer']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['nohpCostumer']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['alamatCostumer']); ?></td>
                                             <td>
-                                                <img src="<?php echo htmlspecialchars('../../imgs/' . $user['filefoto']); ?>" alt="img" class="profile-img">
-                                            </td>
-                                            <td>
-                                                <a style="color: #f58f7c;" href="#" class="showDeleteModal" data-id="<?php echo htmlspecialchars($user['id']); ?>" data-username="<?php echo htmlspecialchars($user['username']); ?>">
+                                                <a style="color: #f58f7c;" href="#" class="showDeleteModal" data-id="<?php echo htmlspecialchars($user['idCostumer']); ?>" data-nama="<?php echo htmlspecialchars($user['namaCostumer']); ?>">
                                                     <ion-icon name="trash-outline" style="font-size: 1.50rem;"></ion-icon>
                                                 </a>
                                             </td>
@@ -264,7 +257,7 @@
             <div class="modal-content">
                 <span class="close" id="closeDeleteModal">&times;</span>
                 <h2>Peringatan</h2><br>
-                <p id="deleteUserName">Apakah Anda yakin ingin menghapus akun ini?</p><br>
+                <p id="deleteCostumer">Apakah Anda yakin ingin menghapus akun ini?</p><br>
                 <button id="btnYesDelete" class="btn-modal">Ya</button>
                 <button id="btnNoDelete" class="btn-modal">Tidak</button>
             </div>
@@ -290,6 +283,7 @@
         </div>
 
         <script src="../../js/script.js"></script>
+
         <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
@@ -330,7 +324,7 @@
             }
 
             const logoutModal = document.getElementById("logoutModal");
-            const showLogoutModal = document.getElementById("showLogoutModal");
+            const showLogoutModal = document.getElementById("showModal");
             const closeLogoutModal = document.getElementById("closeLogoutModal");
             const btnNoLogout = document.getElementById("btnNoLogout");
             const btnYesLogout = document.getElementById("btnYesLogout");
@@ -366,15 +360,15 @@
             const closeDeleteModal = document.getElementById("closeDeleteModal");
             const btnYesDelete = document.getElementById("btnYesDelete");
             const btnNoDelete = document.getElementById("btnNoDelete");
-            const deleteUserName = document.getElementById("deleteUserName");
+            const deleteCostumer = document.getElementById("deleteCostumer");
             let deleteUserId = null;
 
             deleteLinks.forEach(link => {
                 link.onclick = function (e) {
                     e.preventDefault();
                     deleteUserId = this.getAttribute('data-id');
-                    const username = this.getAttribute('data-username');
-                    deleteUserName.textContent = `Apakah Anda yakin ingin menghapus akun "${username}"?`;
+                    const nama = this.getAttribute('data-nama');
+                    deleteCostumer.textContent = `Apakah Anda yakin ingin menghapus akun "${nama}"?`;
                     deleteModal.style.display = "block";
                     setTimeout(() => {
                         deleteModal.classList.add("show");
@@ -410,6 +404,7 @@
                 }
             };
         </script>
+
     </body>
 
 </html>
