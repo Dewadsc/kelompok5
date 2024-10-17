@@ -114,7 +114,7 @@
                     <li>
                         <a href="../suplier">
                             <span class="icon">
-                                <ion-icon name="accessibility-outline"></ion-icon>
+                                <ion-icon name="cube-outline"></ion-icon>
                             </span>
                             <span class="title">Suplier</span>
                         </a>
@@ -183,6 +183,20 @@
                     </div>
                 </div>
 
+                <?php
+                    require '../../config.php';
+
+                    $cariQty = $pdo->prepare("SELECT idBarang, namaBarang, hargaBarang, satuanBarang, qtyBarang FROM data_barang");
+                    $cariQty->execute();
+
+                    $dataQtys = $cariQty->fetchAll(PDO::FETCH_ASSOC);
+                    $totalQty = 0;
+
+                    foreach ($dataQtys as $dataQty) {
+                        $totalQty += $dataQty['qtyBarang'];
+                    }
+                ?>
+
                 <div class="cardBox">
                     <div class="card" onclick="chartMasuk()">
                         <div>
@@ -206,23 +220,12 @@
 
                     <div class="card">
                         <div>
-                            <div class="numbers">1000</div>
+                            <div class="numbers"><?php echo htmlspecialchars($totalQty); ?></div>
                             <div class="cardName">Total Stok</div>
                         </div>
 
                         <div class="iconBx">
                             <ion-icon name="bag-handle-outline"></ion-icon>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div>
-                            <div class="numbers">284</div>
-                            <div class="cardName">Aktivitas Admin</div>
-                        </div>
-
-                        <div class="iconBx">
-                            <ion-icon name="reader-outline"></ion-icon>
                         </div>
                     </div>
                 </div>

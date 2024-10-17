@@ -243,7 +243,7 @@
                     <li>
                         <a href="../suplier">
                             <span class="icon">
-                                <ion-icon name="accessibility-outline"></ion-icon>
+                                <ion-icon name="cube-outline"></ion-icon>
                             </span>
                             <span class="title">Suplier</span>
                         </a>
