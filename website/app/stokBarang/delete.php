@@ -5,14 +5,14 @@
     if (isset($_GET['id'])) {
         $userId = $_GET['id'];
         try {
-            $stmt = $pdo->prepare("DELETE FROM costumer WHERE idCostumer = :id");
+            $stmt = $pdo->prepare("DELETE FROM data_barang WHERE idBarang = :id");
             $stmt->bindParam(':id', $userId);
             $stmt->execute();
 
-            $_SESSION['delete_success'] = "Costumer berhasil dihapus.";
+            $_SESSION['delete_success'] = "Barang berhasil dihapus.";
         } catch (PDOException $e) {
             error_log("Database error: " . $e->getMessage());
-            $_SESSION['delete_error'] = "Terjadi kesalahan saat menghapus Costumer.";
+            $_SESSION['delete_error'] = "Terjadi kesalahan saat menghapus barang.";
         }
     }
 

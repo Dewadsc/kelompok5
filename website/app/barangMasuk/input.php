@@ -15,15 +15,45 @@
     $modalSuccess = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $namaCostumer = sanitizeInput($_POST['namaCostumer']);
-        $alamatCostumer = sanitizeInput($_POST['alamatCostumer']);
-        $nohpCostumer = sanitizeInput($_POST['nohpCostumer']);
+        $idSuplier = sanitizeInput($_POST['idSuplier']);
+        $idBarang = sanitizeInput($_POST['idBarang']);
+        $qtyMasuk = sanitizeInput($_POST['qtyMasuk']);
+        $jamMasuk = sanitizeInput($_POST['jamMasuk']);
+        $tglMasuk = sanitizeInput($_POST['tglMasuk']);
         $id = rand(1, 9999);
-        
-        $stmt = $pdo->prepare("INSERT INTO costumer (idCostumer, namaCostumer, nohpCostumer, alamatCostumer) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$id, $namaCostumer, $nohpCostumer, $alamatCostumer]);
-        $modalSuccess = true;
-        $modalMessage = "Data costumer berhasil di tambahkan.";
+
+        $getBarag = $pdo->prepare("SELECT qtyBarang, idSuplier FROM data_barang WHERE idBarang = ?");
+        $getBarag->execute([$idBarang]);
+        $dataQtyBarang = $getBarag->fetch();
+        $nilaiQtyBarang = $dataQtyBarang['qtyBarang'];
+        $getIdSuplierBarang = $dataQtyBarang['idSuplier'];
+
+        $jumlahQtyBarang = $qtyMasuk + $nilaiQtyBarang;
+
+        if($idSuplier=='') {
+            $modalMessage = "Silahkan pilih suplier terlebih dahulu";
+            $modalSuccess = false;
+        } else if($idBarang=='') {
+            $modalMessage = "Silahkan pilih barang terlebih dahulu";
+            $modalSuccess = false;
+        } else if($getIdSuplierBarang==$idSuplier) {
+            $stmt = $pdo->prepare("INSERT INTO barangmasuk (idMasuk, idSuplier, idBarang, qtyMasuk, tglMasuk, jamMasuk) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$id, $idSuplier, $idBarang, $qtyMasuk, $tglMasuk, $jamMasuk]);
+
+            if($stmt) {
+                $sqlUpdate = $pdo->prepare("UPDATE data_barang SET qtyBarang = ? WHERE idBarang = ?");
+                $sqlUpdate->execute([$jumlahQtyBarang, $idBarang]);
+
+                $modalSuccess = true;
+                $modalMessage = "Data barang masuk berhasil di tambahkan.";
+            } else {
+                $modalSuccess = false;
+                $modalMessage = "Gagal menginput barang masuk.";
+            }
+        } else {
+            $modalSuccess = false;
+            $modalMessage = "Suplier barang tidak sesuai, silahkan masukkan suplier barang dengan benar.";
+        }
     }
 
     $csrf_token = generateCsrfToken();
@@ -36,7 +66,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tambahkan Data Costumer</title>
+        <title>Input Barang Masuk</title>
         <link rel="stylesheet" href="../../css/dashboard.css">
         <style>
             body {
@@ -107,7 +137,8 @@
             input[type="text"],
             input[type="password"],
             input[type="file"],
-            textarea {
+            textarea,
+            select {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #2a2185;
@@ -120,7 +151,8 @@
             input[type="text"]:focus,
             input[type="password"]:focus,
             input[type="file"]:focus,
-            textarea:focus {
+            textarea:focus,
+            select:focus {
                 border-color: #1e1a6d;
                 background-color: #e6f0ff;
             }
@@ -223,7 +255,7 @@
                     </li>
 
                     <li>
-                        <a href="index.php">
+                        <a href="../costumer">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -241,7 +273,7 @@
                     </li>
 
                     <li>
-                        <a href="../barangMasuk">
+                        <a href="index.php">
                             <span class="icon">
                                 <ion-icon name="bag-add-outline"></ion-icon>
                             </span>
@@ -306,7 +338,7 @@
                 <div class="details">
                     <div class="recentOrders">
                         <div class="cardHeader">
-                            <h2>Tambahkan Data Costumer</h2>
+                            <h2>Input Barang Masuk</h2>
                             <a href="index.php" class="back-button">
                                 <ion-icon style="font-size: 1.75rem;" name="arrow-undo-circle-outline"></ion-icon>
                             </a>
@@ -316,16 +348,70 @@
                             <form method="POST" action="" enctype="multipart/form-data">
                                 <div class="info-container">
                                     <div class="info-item">
-                                        <label class="label">Nama Costumer</label>
-                                        <input type="text" name="namaCostumer" required placeholder="Nama Costumer">
+                                        <label class="label">Suplier</label>
+                                        <select name="idSuplier">
+                                            <option value="" disabled selected>--Pilih Suplier--</option>
+                                            <?php
+                                                require '../../config.php';
+
+                                                try {
+                                                    $stmt = $pdo->prepare("SELECT idSuplier, namaSuplier FROM suplier");
+                                                    $stmt->execute();
+
+                                                    $dataSupliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                                } catch (PDOException $e) {
+                                                    error_log("Database error: " . $e->getMessage());
+                                                    echo "Terjadi kesalahan. Silakan coba lagi nanti.";
+                                                    exit();
+                                                }
+                                            ?>
+                                            <?php if ($dataSupliers): ?>
+                                                <?php foreach ($dataSupliers as $dataSuplier): ?>
+                                                    <option value="<?php echo $dataSuplier['idSuplier'] ?>"><?php echo $dataSuplier['namaSuplier'] ?></option>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <option value="">Tidak ada suplier</option>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </select>
                                     </div>
                                     <div class="info-item">
-                                        <label class="label">No Hp Costumer</label>
-                                        <input type="text" inputmode="numeric" name="nohpCostumer" required placeholder="No Hp Costumer">
+                                        <label class="label">Barang</label>
+                                        <select name="idBarang">
+                                            <option value="" disabled selected>--Pilih Barang--</option>
+                                            <?php
+                                                require '../../config.php';
+
+                                                try {
+                                                    $stmt = $pdo->prepare("SELECT idBarang, namaBarang FROM data_barang");
+                                                    $stmt->execute();
+
+                                                    $dataBarangs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                                } catch (PDOException $e) {
+                                                    error_log("Database error: " . $e->getMessage());
+                                                    echo "Terjadi kesalahan. Silakan coba lagi nanti.";
+                                                    exit();
+                                                }
+                                            ?>
+                                            <?php if ($dataBarangs): ?>
+                                                <?php foreach ($dataBarangs as $dataBarang): ?>
+                                                    <option value="<?php echo $dataBarang['idBarang'] ?>"><?php echo $dataBarang['namaBarang'] ?></option>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <option value="">Tidak ada barang</option>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </select>
                                     </div>
                                     <div class="info-item">
-                                        <label class="label">Alamat Costumer</label>
-                                        <textarea name="alamatCostumer" required placeholder="Alamat Costumer" style="height: 150px; resize: none;"></textarea>
+                                        <label class="label">Qty Masuk</label>
+                                        <input type="text" inputmode="numeric" name="qtyMasuk" required placeholder="Qty Masuk">
+                                        <input type="hidden" name="tglMasuk" id="tglMasuk">
+                                        <input type="hidden" name="jamMasuk" id="jamMasuk">
                                     </div>
                                 </div>
                                 <center>
@@ -353,6 +439,17 @@
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
         <script>
+            var currentDate = new Date();
+            var currentDayOfMonth = currentDate.getDate();
+            var currentMonth = currentDate.getMonth();
+            var currentYear = currentDate.getFullYear();
+            var dateString = currentYear + "-" + (currentMonth + 1) + "-" + currentDayOfMonth;
+            var date = Date().slice(16,21);
+            var tglbaru = dateString;
+
+            document.getElementById("jamMasuk").value = date;
+            document.getElementById("tglMasuk").value = tglbaru;
+            
             function closeModal(modalId) {
                 const modal = document.getElementById(modalId);
                 modal.classList.remove("show");

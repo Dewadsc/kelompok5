@@ -4,7 +4,7 @@
     }
 
     if (!isset($_SESSION['user_id'])) {
-        header('Location: ../../');
+        header('Location: ../../../../');
         exit;
     }
 ?>
@@ -17,8 +17,8 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard</title>
-        <link rel="stylesheet" href="../../css/dashboard.css">
+        <title>Chart Barang Masuk</title>
+        <link rel="stylesheet" href="../../../../css/dashboard.css">
         <style>
             .modal {
                 display: none; 
@@ -94,7 +94,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../../">
                             <span class="icon">
                                 <ion-icon name="home-outline"></ion-icon>
                             </span>
@@ -103,7 +103,7 @@
                     </li>
 
                     <li>
-                        <a href="../costumer">
+                        <a href="../../../costumer">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -112,7 +112,7 @@
                     </li>
 
                     <li>
-                        <a href="../suplier">
+                        <a href="../../../suplier">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -121,7 +121,7 @@
                     </li>
 
                     <li>
-                        <a href="../barangMasuk">
+                        <a href="../../../barangMasuk">
                             <span class="icon">
                                 <ion-icon name="bag-add-outline"></ion-icon>
                             </span>
@@ -130,7 +130,7 @@
                     </li>
 
                     <li>
-                        <a href="../barangKeluar">
+                        <a href="../../../barangKeluar">
                             <span class="icon">
                                 <ion-icon name="bag-remove-outline"></ion-icon>
                             </span>
@@ -139,7 +139,7 @@
                     </li>
 
                     <li>
-                        <a href="../stokBarang">
+                        <a href="../../../stokBarang">
                             <span class="icon">
                                 <ion-icon name="bag-handle-outline"></ion-icon>
                             </span>
@@ -148,7 +148,7 @@
                     </li>
 
                     <li>
-                        <a href="../user">
+                        <a href="../../../user">
                             <span class="icon">
                                 <ion-icon name="people-outline"></ion-icon>
                             </span>
@@ -157,7 +157,7 @@
                     </li>
 
                     <li>
-                        <a href="../account">
+                        <a href="../../../account">
                             <span class="icon">
                                 <ion-icon name="person-circle-outline"></ion-icon>
                             </span>
@@ -183,88 +183,11 @@
                     </div>
                 </div>
 
-                <div class="cardBox">
-                    <div class="card" onclick="chartMasuk()">
-                        <div>
-                            <div class="cardName">Chart Barang Masuk</div>
-                        </div>
-
-                        <div class="iconBx">
-                            <ion-icon name="bag-add-outline"></ion-icon>
-                        </div>
-                    </div>
-
-                    <div class="card" onclick="chartKeluar()">
-                        <div>
-                            <div class="cardName">Chart Barang Keluar</div>
-                        </div>
-
-                        <div class="iconBx">
-                            <ion-icon name="bag-remove-outline"></ion-icon>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div>
-                            <div class="numbers">1000</div>
-                            <div class="cardName">Total Stok</div>
-                        </div>
-
-                        <div class="iconBx">
-                            <ion-icon name="bag-handle-outline"></ion-icon>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div>
-                            <div class="numbers">284</div>
-                            <div class="cardName">Aktivitas Admin</div>
-                        </div>
-
-                        <div class="iconBx">
-                            <ion-icon name="reader-outline"></ion-icon>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="details">
-                    <div class="recentCustomers">
+                <div class="details" style="display: block;">
+                    <div class="recentOrders">
                         <div class="cardHeader">
-                            <h2>Daftar Costumer</h2>
+                            <h2>Grafik Chart Barang Masuk</h2>
                         </div>
-
-                        <?php
-                            require '../../config.php';
-
-                            try {
-                                $perintahCostumer = $pdo->prepare("SELECT idCostumer, namaCostumer, nohpCostumer, alamatCostumer FROM costumer");
-                                $perintahCostumer->execute();
-
-                                $costumers = $perintahCostumer->fetchAll(PDO::FETCH_ASSOC);
-                                $no = 1;
-
-                            } catch (PDOException $e) {
-                                error_log("Database error: " . $e->getMessage());
-                                echo "Terjadi kesalahan. Silakan coba lagi nanti.";
-                                exit();
-                            }
-                        ?>
-
-                        <table>
-                            <?php if ($costumers): ?>
-                                <?php foreach ($costumers as $costumer): ?>
-                                    <tr>
-                                        <td>
-                                            <h4><?php echo htmlspecialchars($costumer['namaCostumer']); ?> <br> <span><?php echo htmlspecialchars($costumer['nohpCostumer']); ?></span></h4>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="5">Tidak ada history pengguna.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -282,20 +205,12 @@
             </div>
         </div>
 
-        <script src="../../js/script.js"></script>
+        <script src="../../../../js/script.js"></script>
 
         <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
         <script>
-            function chartMasuk() {
-                window.location.href = "komponen/chartMasuk";
-            }
-
-            function chartKeluar() {
-                window.location.href = "komponen/chartKeluar";
-            }
-
             const modal = document.getElementById("alertModal");
             const btn = document.getElementById("showModal");
             const span = document.getElementsByClassName("close")[0];
@@ -318,7 +233,7 @@
             }
 
             btnYa.onclick = function() {
-                window.location.href = "../logout";
+                window.location.href = "../../../logout";
             }
 
             window.onclick = function(event) {

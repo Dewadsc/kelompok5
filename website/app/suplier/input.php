@@ -15,15 +15,15 @@
     $modalSuccess = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $namaCostumer = sanitizeInput($_POST['namaCostumer']);
-        $alamatCostumer = sanitizeInput($_POST['alamatCostumer']);
-        $nohpCostumer = sanitizeInput($_POST['nohpCostumer']);
+        $namaSuplier = sanitizeInput($_POST['namaSuplier']);
+        $alamatSuplier = sanitizeInput($_POST['alamatSuplier']);
+        $kontakSuplier = sanitizeInput($_POST['kontakSuplier']);
         $id = rand(1, 9999);
         
-        $stmt = $pdo->prepare("INSERT INTO costumer (idCostumer, namaCostumer, nohpCostumer, alamatCostumer) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$id, $namaCostumer, $nohpCostumer, $alamatCostumer]);
+        $stmt = $pdo->prepare("INSERT INTO suplier (idSuplier, namaSuplier, kontakSuplier, alamatSuplier) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$id, $namaSuplier, $kontakSuplier, $alamatSuplier]);
         $modalSuccess = true;
-        $modalMessage = "Data costumer berhasil di tambahkan.";
+        $modalMessage = "Data suplier berhasil di tambahkan.";
     }
 
     $csrf_token = generateCsrfToken();
@@ -36,7 +36,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tambahkan Data Costumer</title>
+        <title>Tambahkan Data Suplier</title>
         <link rel="stylesheet" href="../../css/dashboard.css">
         <style>
             body {
@@ -223,7 +223,7 @@
                     </li>
 
                     <li>
-                        <a href="index.php">
+                        <a href="../costumer">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -232,7 +232,7 @@
                     </li>
 
                     <li>
-                        <a href="../suplier">
+                        <a href="index.php">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -306,7 +306,7 @@
                 <div class="details">
                     <div class="recentOrders">
                         <div class="cardHeader">
-                            <h2>Tambahkan Data Costumer</h2>
+                            <h2>Tambahkan Data Suplier</h2>
                             <a href="index.php" class="back-button">
                                 <ion-icon style="font-size: 1.75rem;" name="arrow-undo-circle-outline"></ion-icon>
                             </a>
@@ -316,16 +316,16 @@
                             <form method="POST" action="" enctype="multipart/form-data">
                                 <div class="info-container">
                                     <div class="info-item">
-                                        <label class="label">Nama Costumer</label>
-                                        <input type="text" name="namaCostumer" required placeholder="Nama Costumer">
+                                        <label class="label">Nama Suplier</label>
+                                        <input type="text" name="namaSuplier" required placeholder="Nama Suplier">
                                     </div>
                                     <div class="info-item">
-                                        <label class="label">No Hp Costumer</label>
-                                        <input type="text" inputmode="numeric" name="nohpCostumer" required placeholder="No Hp Costumer">
+                                        <label class="label">Kontak Suplier</label>
+                                        <input type="text" inputmode="numeric" name="kontakSuplier" required placeholder="Kontak Suplier">
                                     </div>
                                     <div class="info-item">
-                                        <label class="label">Alamat Costumer</label>
-                                        <textarea name="alamatCostumer" required placeholder="Alamat Costumer" style="height: 150px; resize: none;"></textarea>
+                                        <label class="label">Alamat Suplier</label>
+                                        <textarea name="alamatSuplier" placeholder="Alamat Suplier" required style="height: 150px; resize: none;"></textarea>
                                     </div>
                                 </div>
                                 <center>

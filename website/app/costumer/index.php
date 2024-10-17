@@ -112,7 +112,16 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../suplier">
+                            <span class="icon">
+                                <ion-icon name="accessibility-outline"></ion-icon>
+                            </span>
+                            <span class="title">Suplier</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../barangMasuk">
                             <span class="icon">
                                 <ion-icon name="bag-add-outline"></ion-icon>
                             </span>
@@ -121,7 +130,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../barangKeluar">
                             <span class="icon">
                                 <ion-icon name="bag-remove-outline"></ion-icon>
                             </span>
@@ -130,7 +139,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../stokBarang">
                             <span class="icon">
                                 <ion-icon name="bag-handle-outline"></ion-icon>
                             </span>
@@ -233,7 +242,7 @@
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="5">Tidak ada data pengguna.</td>
+                                        <td colspan="5">Tidak ada data costumer.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -257,7 +266,7 @@
             <div class="modal-content">
                 <span class="close" id="closeDeleteModal">&times;</span>
                 <h2>Peringatan</h2><br>
-                <p id="deleteCostumer">Apakah Anda yakin ingin menghapus akun ini?</p><br>
+                <p id="deleteCostumer">Apakah Anda yakin ingin menghapus costumer ini?</p><br>
                 <button id="btnYesDelete" class="btn-modal">Ya</button>
                 <button id="btnNoDelete" class="btn-modal">Tidak</button>
             </div>
@@ -368,7 +377,7 @@
                     e.preventDefault();
                     deleteUserId = this.getAttribute('data-id');
                     const nama = this.getAttribute('data-nama');
-                    deleteCostumer.textContent = `Apakah Anda yakin ingin menghapus akun "${nama}"?`;
+                    deleteCostumer.textContent = `Apakah Anda yakin ingin menghapus costumer "${nama}"?`;
                     deleteModal.style.display = "block";
                     setTimeout(() => {
                         deleteModal.classList.add("show");

@@ -279,7 +279,16 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../suplier">
+                            <span class="icon">
+                                <ion-icon name="accessibility-outline"></ion-icon>
+                            </span>
+                            <span class="title">Suplier</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../barangMasuk">
                             <span class="icon">
                                 <ion-icon name="bag-add-outline"></ion-icon>
                             </span>
@@ -288,7 +297,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../barangKeluar">
                             <span class="icon">
                                 <ion-icon name="bag-remove-outline"></ion-icon>
                             </span>
@@ -297,7 +306,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../stokBarang">
                             <span class="icon">
                                 <ion-icon name="bag-handle-outline"></ion-icon>
                             </span>

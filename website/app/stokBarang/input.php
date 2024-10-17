@@ -15,15 +15,22 @@
     $modalSuccess = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $namaCostumer = sanitizeInput($_POST['namaCostumer']);
-        $alamatCostumer = sanitizeInput($_POST['alamatCostumer']);
-        $nohpCostumer = sanitizeInput($_POST['nohpCostumer']);
+        $namaBarang = sanitizeInput($_POST['namaBarang']);
+        $hargaBarang = sanitizeInput($_POST['hargaBarang']);
+        $satuanBarang = sanitizeInput($_POST['satuanBarang']);
+        $idSuplier = sanitizeInput($_POST['idSuplier']);
+        $qtyBarang = 0;
         $id = rand(1, 9999);
-        
-        $stmt = $pdo->prepare("INSERT INTO costumer (idCostumer, namaCostumer, nohpCostumer, alamatCostumer) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$id, $namaCostumer, $nohpCostumer, $alamatCostumer]);
-        $modalSuccess = true;
-        $modalMessage = "Data costumer berhasil di tambahkan.";
+
+        if($idSuplier=='') {
+            $modalSuccess = false;
+            $modalMessage = "Silahkan anda lengkapi suplier terlebih dahulu.";
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO data_barang (idBarang, namaBarang, hargaBarang, satuanBarang, qtyBarang, idSuplier) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$id, $namaBarang, $hargaBarang, $satuanBarang, $qtyBarang, $idSuplier]);
+            $modalSuccess = true;
+            $modalMessage = "Data barang berhasil di tambahkan.";
+        }
     }
 
     $csrf_token = generateCsrfToken();
@@ -36,7 +43,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tambahkan Data Costumer</title>
+        <title>Tambahkan Data Barang</title>
         <link rel="stylesheet" href="../../css/dashboard.css">
         <style>
             body {
@@ -107,7 +114,8 @@
             input[type="text"],
             input[type="password"],
             input[type="file"],
-            textarea {
+            textarea,
+            select {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #2a2185;
@@ -120,7 +128,8 @@
             input[type="text"]:focus,
             input[type="password"]:focus,
             input[type="file"]:focus,
-            textarea:focus {
+            textarea:focus,
+            select:focus {
                 border-color: #1e1a6d;
                 background-color: #e6f0ff;
             }
@@ -223,7 +232,7 @@
                     </li>
 
                     <li>
-                        <a href="index.php">
+                        <a href="../costumer">
                             <span class="icon">
                                 <ion-icon name="accessibility-outline"></ion-icon>
                             </span>
@@ -259,7 +268,7 @@
                     </li>
 
                     <li>
-                        <a href="../stokBarang">
+                        <a href="index.php">
                             <span class="icon">
                                 <ion-icon name="bag-handle-outline"></ion-icon>
                             </span>
@@ -306,7 +315,7 @@
                 <div class="details">
                     <div class="recentOrders">
                         <div class="cardHeader">
-                            <h2>Tambahkan Data Costumer</h2>
+                            <h2>Tambahkan Data Barang</h2>
                             <a href="index.php" class="back-button">
                                 <ion-icon style="font-size: 1.75rem;" name="arrow-undo-circle-outline"></ion-icon>
                             </a>
@@ -316,16 +325,46 @@
                             <form method="POST" action="" enctype="multipart/form-data">
                                 <div class="info-container">
                                     <div class="info-item">
-                                        <label class="label">Nama Costumer</label>
-                                        <input type="text" name="namaCostumer" required placeholder="Nama Costumer">
+                                        <label class="label">Nama Barang</label>
+                                        <input type="text" name="namaBarang" required placeholder="Nama Barang">
                                     </div>
                                     <div class="info-item">
-                                        <label class="label">No Hp Costumer</label>
-                                        <input type="text" inputmode="numeric" name="nohpCostumer" required placeholder="No Hp Costumer">
+                                        <label class="label">Harga Barang</label>
+                                        <input type="text" inputmode="numeric" name="hargaBarang" required placeholder="Harga Barang">
                                     </div>
                                     <div class="info-item">
-                                        <label class="label">Alamat Costumer</label>
-                                        <textarea name="alamatCostumer" required placeholder="Alamat Costumer" style="height: 150px; resize: none;"></textarea>
+                                        <label class="label">Satuan Barang</label>
+                                        <input type="text" inputmode="numeric" name="satuanBarang" required placeholder="Satuan Barang">
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="label">Suplier</label>
+                                        <select name="idSuplier">
+                                            <option value="" disabled selected>--Pilih Suplier--</option>
+                                            <?php
+                                                require '../../config.php';
+
+                                                try {
+                                                    $stmt = $pdo->prepare("SELECT idSuplier, namaSuplier FROM suplier");
+                                                    $stmt->execute();
+
+                                                    $dataSupliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                                } catch (PDOException $e) {
+                                                    error_log("Database error: " . $e->getMessage());
+                                                    echo "Terjadi kesalahan. Silakan coba lagi nanti.";
+                                                    exit();
+                                                }
+                                            ?>
+                                            <?php if ($dataSupliers): ?>
+                                                <?php foreach ($dataSupliers as $dataSuplier): ?>
+                                                    <option value="<?php echo $dataSuplier['idSuplier'] ?>"><?php echo $dataSuplier['namaSuplier'] ?></option>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <option value="">Tidak ada suplier</option>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <center>
