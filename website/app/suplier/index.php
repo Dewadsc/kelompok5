@@ -370,12 +370,12 @@
             const btnYesDelete = document.getElementById("btnYesDelete");
             const btnNoDelete = document.getElementById("btnNoDelete");
             const deleteSuplier = document.getElementById("deleteSuplier");
-            let deleteUserId = null;
+            let deleteSuplierId = null;
 
             deleteLinks.forEach(link => {
                 link.onclick = function (e) {
                     e.preventDefault();
-                    deleteUserId = this.getAttribute('data-id');
+                    deleteSuplierId = this.getAttribute('data-id');
                     const nama = this.getAttribute('data-nama');
                     deleteSuplier.textContent = `Apakah Anda yakin ingin menghapus suplier "${nama}"?`;
                     deleteModal.style.display = "block";
@@ -394,7 +394,7 @@
             };
 
             btnYesDelete.onclick = function () {
-                window.location.href = "delete.php?id=" + deleteUserId;
+                window.location.href = "delete.php?id=" + deleteSuplierId;
             };
 
             function closeDeleteModalFunc() {

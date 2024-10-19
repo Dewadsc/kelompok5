@@ -296,7 +296,7 @@
             <div class="modal-content">
                 <span class="close" id="closeDeleteModal">&times;</span>
                 <h2>Peringatan</h2><br>
-                <p id="deleteCostumer">Apakah Anda yakin ingin menghapus akun ini?</p><br>
+                <p id="deleteMasuk">Apakah Anda yakin ingin menghapus barang masuk ini?</p><br>
                 <button id="btnYesDelete" class="btn-modal">Ya</button>
                 <button id="btnNoDelete" class="btn-modal">Tidak</button>
             </div>
@@ -403,15 +403,15 @@
             const closeDeleteModal = document.getElementById("closeDeleteModal");
             const btnYesDelete = document.getElementById("btnYesDelete");
             const btnNoDelete = document.getElementById("btnNoDelete");
-            const deleteCostumer = document.getElementById("deleteCostumer");
-            let deleteUserId = null;
+            const deleteMasuk = document.getElementById("deleteMasuk");
+            let deleteMasukId = null;
 
             deleteLinks.forEach(link => {
                 link.onclick = function (e) {
                     e.preventDefault();
-                    deleteUserId = this.getAttribute('data-id');
+                    deleteMasukId = this.getAttribute('data-id');
                     const nama = this.getAttribute('data-nama');
-                    deleteCostumer.textContent = `Apakah Anda yakin ingin menghapus akun "${nama}"?`;
+                    deleteMasuk.textContent = `Apakah Anda yakin ingin menghapus barang masuk ini "${nama}"?`;
                     deleteModal.style.display = "block";
                     setTimeout(() => {
                         deleteModal.classList.add("show");
@@ -428,7 +428,7 @@
             };
 
             btnYesDelete.onclick = function () {
-                window.location.href = "delete.php?id=" + deleteUserId;
+                window.location.href = "delete.php?id=" + deleteMasukId;
             };
 
             function closeDeleteModalFunc() {

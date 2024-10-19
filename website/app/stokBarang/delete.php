@@ -3,10 +3,10 @@
     require '../../config.php';
 
     if (isset($_GET['id'])) {
-        $userId = $_GET['id'];
+        $stokId = $_GET['id'];
         try {
             $stmt = $pdo->prepare("DELETE FROM data_barang WHERE idBarang = :id");
-            $stmt->bindParam(':id', $userId);
+            $stmt->bindParam(':id', $stokId);
             $stmt->execute();
 
             $_SESSION['delete_success'] = "Barang berhasil dihapus.";

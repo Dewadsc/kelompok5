@@ -17,7 +17,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Database Barang</title>
+        <title>Data Barang Keluar</title>
         <link rel="stylesheet" href="../../css/dashboard.css">
         <style>
             .modal {
@@ -80,6 +80,30 @@
             .btn-modal:hover {
                 background-color: #1c1a6a;
             }
+
+            .download-button {
+                cursor: pointer;
+                background-color: #2a2185;
+                color: white;
+                border: none;
+                width: 200px;
+                height: min-content;
+                border-radius: 5px;
+                padding: 10px 20px;
+                font-size: 16px;
+                transition: background-color 0.3s, transform 0.3s;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .download-button:hover {
+                background-color: #1e1a6d;
+                transform: translateY(-2px);
+            }
+
+            .download-button:focus {
+                outline: none;
+                box-shadow: 0 0 5px rgba(42, 33, 133, 0.5);
+            }
         </style>
     </head>
 
@@ -130,7 +154,7 @@
                     </li>
 
                     <li>
-                        <a href="../barangKeluar">
+                        <a href="#">
                             <span class="icon">
                                 <ion-icon name="bag-remove-outline"></ion-icon>
                             </span>
@@ -139,7 +163,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="../stokBarang">
                             <span class="icon">
                                 <ion-icon name="bag-handle-outline"></ion-icon>
                             </span>
@@ -186,11 +210,13 @@
                 <div class="details" style="display: block;">
                     <div class="recentOrders">
                         <div class="cardHeader">
-                            <h2>Database Barang</h2>
+                            <h2>Data Barang Keluar</h2>
                             <a href="input.php">
                                 <ion-icon style="font-size: 1.75rem;" name="add-circle-outline"></ion-icon>
                             </a>
                         </div>
+
+                        <button type="submit" onclick="downloadfile()" class="download-button">Download to Excel</button>
 
                         <?php
                             require '../../config.php';
@@ -202,10 +228,10 @@
                             }
 
                             try {
-                                $stmt = $pdo->prepare("SELECT idBarang, namaBarang, hargaBarang, satuanBarang, qtyBarang FROM data_barang");
+                                $stmt = $pdo->prepare("SELECT * FROM data_barang INNER JOIN barangkeluar ON data_barang.idBarang = barangkeluar.idBarang INNER JOIN costumer ON barangkeluar.idCostumer = costumer.idCostumer");
                                 $stmt->execute();
 
-                                $barangs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                $dataKeluars = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 $no = 1;
 
                             } catch (PDOException $e) {
@@ -220,23 +246,25 @@
                                 <tr>
                                     <td>No</td>
                                     <td>Nama Barang</td>
-                                    <td>Harga Barang</td>
-                                    <td>Satuan Barang</td>
-                                    <td>Qty Barang</td>
+                                    <td>Costumer</td>
+                                    <td>Qty Keluar</td>
+                                    <td>Tgl Keluar</td>
+                                    <td>Jam Keluar</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ($barangs): ?>
-                                    <?php foreach ($barangs as $barang): ?>
+                                <?php if ($dataKeluars): ?>
+                                    <?php foreach ($dataKeluars as $keluar): ?>
                                         <tr>
                                             <td><?php echo $no++ ?></td>
-                                            <td><?php echo htmlspecialchars($barang['namaBarang']); ?></td>
-                                            <td><?php echo htmlspecialchars($barang['hargaBarang']); ?></td>
-                                            <td><?php echo htmlspecialchars($barang['satuanBarang']); ?></td>
-                                            <td><?php echo htmlspecialchars($barang['qtyBarang']); ?></td>
+                                            <td><?php echo htmlspecialchars($keluar['namaBarang']); ?></td>
+                                            <td><?php echo htmlspecialchars($keluar['namaCostumer']); ?></td>
+                                            <td><?php echo htmlspecialchars($keluar['qtyKeluar']); ?></td>
+                                            <td><?php echo htmlspecialchars(date('d-m-Y', strtotime($keluar['tglKeluar']))); ?></td>
+                                            <td><?php echo htmlspecialchars($keluar['jamKeluar']); ?></td>
                                             <td>
-                                                <a style="color: #f58f7c;" href="#" class="showDeleteModal" data-id="<?php echo htmlspecialchars($barang['idBarang']); ?>" data-nama="<?php echo htmlspecialchars($barang['namaBarang']); ?>">
+                                                <a style="color: #f58f7c;" href="#" class="showDeleteModal" data-id="<?php echo htmlspecialchars($keluar['idKeluar']); ?>" data-nama="<?php echo htmlspecialchars($keluar['namaBarang']); ?>">
                                                     <ion-icon name="trash-outline" style="font-size: 1.50rem;"></ion-icon>
                                                 </a>
                                             </td>
@@ -244,7 +272,7 @@
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="6">Tidak ada data barang.</td>
+                                        <td colspan="7">Tidak ada data barang keluar.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -268,7 +296,7 @@
             <div class="modal-content">
                 <span class="close" id="closeDeleteModal">&times;</span>
                 <h2>Peringatan</h2><br>
-                <p id="deleteStokBarang">Apakah Anda yakin ingin menghapus barang ini?</p><br>
+                <p id="deleteKeluar">Apakah Anda yakin ingin menghapus barang keluar ini?</p><br>
                 <button id="btnYesDelete" class="btn-modal">Ya</button>
                 <button id="btnNoDelete" class="btn-modal">Tidak</button>
             </div>
@@ -299,6 +327,10 @@
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
         <script>
+            function downloadfile() {
+                window.location.href = "export.php";
+            }
+
             const modal = document.getElementById("alertModal");
             const span = document.getElementsByClassName("close")[0];
             const closeBtn = document.getElementById("closeModal");
@@ -371,15 +403,15 @@
             const closeDeleteModal = document.getElementById("closeDeleteModal");
             const btnYesDelete = document.getElementById("btnYesDelete");
             const btnNoDelete = document.getElementById("btnNoDelete");
-            const deleteStokBarang = document.getElementById("deleteStokBarang");
-            let deleteStokId = null;
+            const deleteKeluar = document.getElementById("deleteKeluar");
+            let deleteKeluarId = null;
 
             deleteLinks.forEach(link => {
                 link.onclick = function (e) {
                     e.preventDefault();
-                    deleteStokId = this.getAttribute('data-id');
+                    deleteKeluarId = this.getAttribute('data-id');
                     const nama = this.getAttribute('data-nama');
-                    deleteStokBarang.textContent = `Apakah Anda yakin ingin menghapus barang "${nama}"?`;
+                    deleteKeluar.textContent = `Apakah Anda yakin ingin menghapus barang keluar "${nama}"?`;
                     deleteModal.style.display = "block";
                     setTimeout(() => {
                         deleteModal.classList.add("show");
@@ -396,7 +428,7 @@
             };
 
             btnYesDelete.onclick = function () {
-                window.location.href = "delete.php?id=" + deleteStokId;
+                window.location.href = "delete.php?id=" + deleteKeluarId;
             };
 
             function closeDeleteModalFunc() {

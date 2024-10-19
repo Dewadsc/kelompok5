@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 17 Okt 2024 pada 23.16
+-- Waktu pembuatan: 19 Okt 2024 pada 09.49
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -20,6 +20,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `kelompok5`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `barangkeluar`
+--
+
+CREATE TABLE `barangkeluar` (
+  `idKeluar` int(255) NOT NULL,
+  `idCostumer` int(255) NOT NULL,
+  `idBarang` int(255) NOT NULL,
+  `qtyKeluar` int(255) NOT NULL,
+  `tglKeluar` date NOT NULL,
+  `jamKeluar` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `barangkeluar`
+--
+
+INSERT INTO `barangkeluar` (`idKeluar`, `idCostumer`, `idBarang`, `qtyKeluar`, `tglKeluar`, `jamKeluar`) VALUES
+(5068, 8741, 1441, 17, '2024-10-19', '14:30');
 
 -- --------------------------------------------------------
 
@@ -41,8 +63,7 @@ CREATE TABLE `barangmasuk` (
 --
 
 INSERT INTO `barangmasuk` (`idMasuk`, `idSuplier`, `idBarang`, `qtyMasuk`, `tglMasuk`, `jamMasuk`) VALUES
-(1784, 6944, 1441, 90, '2024-10-18', '04:02'),
-(2854, 9881, 856, 40, '2024-10-17', '17:37');
+(1784, 6944, 1441, 90, '2024-10-18', '04:02');
 
 -- --------------------------------------------------------
 
@@ -86,8 +107,8 @@ CREATE TABLE `data_barang` (
 --
 
 INSERT INTO `data_barang` (`idBarang`, `namaBarang`, `hargaBarang`, `satuanBarang`, `qtyBarang`, `idSuplier`) VALUES
-(856, 'Tisu Magic', 10000, 'pcs', 40, 9881),
-(1441, 'Infinix Note 40 Pro', 3500000, 'pcs', 90, 6944),
+(1441, 'Infinix Note 40 Pro', 3500000, 'pcs', 73, 6944),
+(2251, 'Tisu Magic', 10000, 'pcs', 0, 9881),
 (4937, 'Vivo V40 Lite', 3500000, 'pcs', 0, 7271);
 
 -- --------------------------------------------------------
@@ -137,6 +158,12 @@ INSERT INTO `users` (`id`, `username`, `password`, `nohp`, `filefoto`) VALUES
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indeks untuk tabel `barangkeluar`
+--
+ALTER TABLE `barangkeluar`
+  ADD PRIMARY KEY (`idKeluar`);
 
 --
 -- Indeks untuk tabel `barangmasuk`
