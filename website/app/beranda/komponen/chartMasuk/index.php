@@ -19,6 +19,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Chart Barang Masuk</title>
         <link rel="stylesheet" href="../../../../css/dashboard.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             .modal {
                 display: none; 
@@ -79,6 +80,11 @@
 
             .btn-modal:hover {
                 background-color: #1c1a6a;
+            }
+
+            canvas {
+                max-width: 800px;
+                margin: auto;
             }
         </style>
     </head>
@@ -187,7 +193,14 @@
                     <div class="recentOrders">
                         <div class="cardHeader">
                             <h2>Grafik Chart Barang Masuk</h2>
+                            <a href="../../index.php" class="back-button">
+                                <ion-icon style="font-size: 1.75rem;" name="arrow-undo-circle-outline"></ion-icon>
+                            </a>
                         </div>
+
+                        <br><br>
+
+                        <canvas id="myChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -211,6 +224,81 @@
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
         <script>
+            const ctx = document.getElementById('myChart').getContext('2d');
+
+            fetch('get_data.php')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => `Bulan ${item.bulan}`);
+                    const datasets = [];
+
+                    const groupedData = {};
+                    data.forEach(item => {
+                        if (!groupedData[item.nama_barang]) {
+                            groupedData[item.nama_barang] = Array(12).fill(0);
+                        }
+                        groupedData[item.nama_barang][item.bulan - 1] = item.jumlah;
+                    });
+
+                    for (const [key, value] of Object.entries(groupedData)) {
+                        datasets.push({
+                            label: key,
+                            data: value,
+                            borderColor: getRandomColor(),
+                            fill: false,
+                            tension: 0.1,
+                        });
+                    }
+
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false,
+                                },
+                            },
+                            interaction: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Jumlah'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Bulan'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+
+            function getRandomColor() {
+                const letters = '0123456789ABCDEF';
+                let color = '#';
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+
             const modal = document.getElementById("alertModal");
             const btn = document.getElementById("showModal");
             const span = document.getElementsByClassName("close")[0];
