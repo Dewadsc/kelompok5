@@ -15,30 +15,30 @@
     $modalSuccess = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $idSuplier = sanitizeInput($_POST['idSuplier']);
+        $username = sanitizeInput($_POST['username']);
         $idBarang = sanitizeInput($_POST['idBarang']);
         $qtyMasuk = sanitizeInput($_POST['qtyMasuk']);
         $jamMasuk = sanitizeInput($_POST['jamMasuk']);
         $tglMasuk = sanitizeInput($_POST['tglMasuk']);
         $id = rand(1, 9999);
 
-        $getBarag = $pdo->prepare("SELECT qtyBarang, idSuplier FROM data_barang WHERE idBarang = ?");
+        $getBarag = $pdo->prepare("SELECT qtyBarang, username FROM data_barang WHERE idBarang = ?");
         $getBarag->execute([$idBarang]);
         $dataQtyBarang = $getBarag->fetch();
         $nilaiQtyBarang = $dataQtyBarang['qtyBarang'];
-        $getIdSuplierBarang = $dataQtyBarang['idSuplier'];
+        $getusernameBarang = $dataQtyBarang['username'];
 
         $jumlahQtyBarang = $qtyMasuk + $nilaiQtyBarang;
 
-        if($idSuplier=='') {
+        if($username=='') {
             $modalMessage = "Silahkan pilih suplier terlebih dahulu";
             $modalSuccess = false;
         } else if($idBarang=='') {
             $modalMessage = "Silahkan pilih barang terlebih dahulu";
             $modalSuccess = false;
-        } else if($getIdSuplierBarang==$idSuplier) {
-            $stmt = $pdo->prepare("INSERT INTO barangmasuk (idMasuk, idSuplier, idBarang, qtyMasuk, tglMasuk, jamMasuk) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$id, $idSuplier, $idBarang, $qtyMasuk, $tglMasuk, $jamMasuk]);
+        } else if($getusernameBarang==$username) {
+            $stmt = $pdo->prepare("INSERT INTO barangmasuk (idMasuk, username, idBarang, qtyMasuk, tglMasuk, jamMasuk) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$id, $username, $idBarang, $qtyMasuk, $tglMasuk, $jamMasuk]);
 
             if($stmt) {
                 $sqlUpdate = $pdo->prepare("UPDATE data_barang SET qtyBarang = ? WHERE idBarang = ?");
@@ -349,14 +349,14 @@
                                 <div class="info-container">
                                     <div class="info-item">
                                         <label class="label">Suplier</label>
-                                        <select name="idSuplier">
+                                        <select name="username">
                                             <option value="" disabled selected>--Pilih Suplier--</option>
                                             <?php
                                                 require '../../config.php';
 
                                                 try {
-                                                    $stmt = $pdo->prepare("SELECT idSuplier, namaSuplier FROM suplier");
-                                                    $stmt->execute();
+                                                    $stmt = $pdo->prepare("SELECT username FROM users WHERE role = ?");
+                                                    $stmt->execute(['Supplier']);
 
                                                     $dataSupliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -368,7 +368,7 @@
                                             ?>
                                             <?php if ($dataSupliers): ?>
                                                 <?php foreach ($dataSupliers as $dataSuplier): ?>
-                                                    <option value="<?php echo $dataSuplier['idSuplier'] ?>"><?php echo $dataSuplier['namaSuplier'] ?></option>
+                                                    <option value="<?php echo $dataSuplier['username'] ?>"><?php echo $dataSuplier['username'] ?></option>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>

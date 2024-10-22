@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 19 Okt 2024 pada 09.49
+-- Waktu pembuatan: 22 Okt 2024 pada 22.54
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `barangkeluar` (
   `idKeluar` int(255) NOT NULL,
-  `idCostumer` int(255) NOT NULL,
+  `username` varchar(500) NOT NULL,
   `idBarang` int(255) NOT NULL,
   `qtyKeluar` int(255) NOT NULL,
   `tglKeluar` date NOT NULL,
@@ -40,8 +40,8 @@ CREATE TABLE `barangkeluar` (
 -- Dumping data untuk tabel `barangkeluar`
 --
 
-INSERT INTO `barangkeluar` (`idKeluar`, `idCostumer`, `idBarang`, `qtyKeluar`, `tglKeluar`, `jamKeluar`) VALUES
-(5068, 8741, 1441, 17, '2024-10-19', '14:30');
+INSERT INTO `barangkeluar` (`idKeluar`, `username`, `idBarang`, `qtyKeluar`, `tglKeluar`, `jamKeluar`) VALUES
+(7617, 'mawar', 1233, 17, '2024-10-23', '03:51');
 
 -- --------------------------------------------------------
 
@@ -51,7 +51,7 @@ INSERT INTO `barangkeluar` (`idKeluar`, `idCostumer`, `idBarang`, `qtyKeluar`, `
 
 CREATE TABLE `barangmasuk` (
   `idMasuk` int(255) NOT NULL,
-  `idSuplier` int(255) NOT NULL,
+  `username` varchar(500) NOT NULL,
   `idBarang` int(255) NOT NULL,
   `qtyMasuk` int(255) NOT NULL,
   `tglMasuk` date NOT NULL,
@@ -62,30 +62,8 @@ CREATE TABLE `barangmasuk` (
 -- Dumping data untuk tabel `barangmasuk`
 --
 
-INSERT INTO `barangmasuk` (`idMasuk`, `idSuplier`, `idBarang`, `qtyMasuk`, `tglMasuk`, `jamMasuk`) VALUES
-(1784, 6944, 1441, 90, '2024-10-18', '04:02');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `costumer`
---
-
-CREATE TABLE `costumer` (
-  `idCostumer` int(255) NOT NULL,
-  `namaCostumer` varchar(1000) NOT NULL,
-  `nohpCostumer` varchar(25) NOT NULL,
-  `alamatCostumer` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `costumer`
---
-
-INSERT INTO `costumer` (`idCostumer`, `namaCostumer`, `nohpCostumer`, `alamatCostumer`) VALUES
-(8741, 'Mutiara Utami', '0852xxxxxxxx', 'btn jl.asri, jambi'),
-(8876, 'Aura', '0852xxxxxxxx', 'Kwitang'),
-(9519, 'Cleo', '0852xxxxxxxx', 'Jl.Kembang VIII');
+INSERT INTO `barangmasuk` (`idMasuk`, `username`, `idBarang`, `qtyMasuk`, `tglMasuk`, `jamMasuk`) VALUES
+(5328, 'realme', 1233, 40, '2024-10-23', '03:47');
 
 -- --------------------------------------------------------
 
@@ -99,39 +77,17 @@ CREATE TABLE `data_barang` (
   `hargaBarang` int(255) NOT NULL,
   `satuanBarang` varchar(1000) NOT NULL,
   `qtyBarang` int(255) NOT NULL,
-  `idSuplier` int(255) NOT NULL
+  `username` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `data_barang`
 --
 
-INSERT INTO `data_barang` (`idBarang`, `namaBarang`, `hargaBarang`, `satuanBarang`, `qtyBarang`, `idSuplier`) VALUES
-(1441, 'Infinix Note 40 Pro', 3500000, 'pcs', 73, 6944),
-(2251, 'Tisu Magic', 10000, 'pcs', 0, 9881),
-(4937, 'Vivo V40 Lite', 3500000, 'pcs', 0, 7271);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `suplier`
---
-
-CREATE TABLE `suplier` (
-  `idSuplier` int(255) NOT NULL,
-  `namaSuplier` varchar(1000) NOT NULL,
-  `kontakSuplier` varchar(1000) NOT NULL,
-  `alamatSuplier` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `suplier`
---
-
-INSERT INTO `suplier` (`idSuplier`, `namaSuplier`, `kontakSuplier`, `alamatSuplier`) VALUES
-(6944, 'Infinix', '021', 'Indonesia'),
-(7271, 'Vivo', '021', 'Indonesia'),
-(9881, 'Indofood', '021', 'Indonesia');
+INSERT INTO `data_barang` (`idBarang`, `namaBarang`, `hargaBarang`, `satuanBarang`, `qtyBarang`, `username`) VALUES
+(587, 'Tisu Magic', 10000, 'pcs', 0, 'fiesta'),
+(1233, 'Realme 5i', 3500000, 'pcs', 23, 'realme'),
+(7506, 'Vivo V40 Lite', 3500000, 'pcs', 0, 'vivo');
 
 -- --------------------------------------------------------
 
@@ -144,16 +100,26 @@ CREATE TABLE `users` (
   `username` varchar(1000) NOT NULL,
   `password` varchar(1000) NOT NULL,
   `nohp` varchar(25) NOT NULL,
-  `filefoto` varchar(1000) NOT NULL
+  `filefoto` varchar(1000) NOT NULL,
+  `alamat` text NOT NULL,
+  `role` enum('Admin','Costumer','Supplier') NOT NULL,
+  `salt` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `nohp`, `filefoto`) VALUES
-(3539, 'dewadsc', '$2y$10$z9XzWhwQOvcybxzgsGok2uZmQyunxXf.0smpRAqXqF1wpj202fVn6', '085215636662', 'dewa_1728897945.jpeg'),
-(7349, 'kelompok5', '$2y$10$489RU8yISKTAGfGwVSrMb.7s3UicZQpMi6kU7uSVhQgtPgHinE48S', '021', 'user_670c9944cc0016.43300786.jpg');
+INSERT INTO `users` (`id`, `username`, `password`, `nohp`, `filefoto`, `alamat`, `role`, `salt`) VALUES
+(1754, 'citra', 'a90b090559f204bd51e3df695d9c56d9d8c7e9b2e5001b0d1244116a641fef0c', '021', 'citra_1729627429.jpg', 'Indonesia', 'Costumer', '2343fd4d1ebb3b5d5eab86c714c20883'),
+(2875, 'kelompok5', '676f18d2bbd58c0bbc1f6d7d878cbf172cdf17297afad04872e1bfb3afe3949b', '021', 'kelompok5_1729627030.jpg', 'Indonesia', 'Admin', 'f582f2a01b0cb26e810a1ac683e79d63'),
+(3777, 'realme', '99458067ceb2e99a2785e5cf7e600e3a99602fd3e076e8f6968d09a7c1798e4e', '021', 'realme_1729627343.jpg', 'Indonesia', 'Supplier', '19bd7e8bcb521f0819378e016d76a066'),
+(5271, 'dewadsc', 'f226c202dba354e532ed98d3de83871c186b92552383b316459b992c2af99a00', '085215636662', 'dewadsc_1729627294.jpeg', 'Indonesia', 'Admin', 'eb31f1aa391061cf55429600bc8fd438'),
+(5292, 'vivo', '7d644fddf888e0032563a1ba1ff7a5ef47acc291a700861ff6310aab7ac22828', '021', 'vivo_1729627323.jpg', 'Indonesia', 'Supplier', '2b33e97b61bdaeb530f2f9769a79e6a1'),
+(6373, 'mawar', 'cf7bf5994952d36b031af68a854148c7a1327e80b6a4ea1d30c10506baa82994', '021', 'mawar_1729627415.jpg', 'Indonesia', 'Costumer', '27dda5f599a64dac8c7ca1b37f9e2946'),
+(7750, 'indah', 'e39e4e09dc2aff51387913aa10575836128e1d61df478b704519ac2116f04b71', '021', 'indah_1729627396.jpg', 'Indonesia', 'Costumer', '3ba4a32359c49739034242e28c8872df'),
+(7752, 'bunga', 'e5c39d75480dc83bd603b6718f8923015e0351cb10229cce0c20e6cd0e9eb068', '021', 'bunga_1729627381.jpg', 'Indonesia', 'Costumer', '6c78f14cf683fc483e44c5103d682b8a'),
+(9347, 'fiesta', '9ce3c87387fccd14576ad8e400053d80e00829dd2d7192db9aeb7440b0efe76d', '021', 'fiesta_1729627364.jpg', 'Indonesia', 'Supplier', '1037196adab09705bfd2a112370283a0');
 
 --
 -- Indexes for dumped tables
@@ -172,22 +138,10 @@ ALTER TABLE `barangmasuk`
   ADD PRIMARY KEY (`idMasuk`);
 
 --
--- Indeks untuk tabel `costumer`
---
-ALTER TABLE `costumer`
-  ADD PRIMARY KEY (`idCostumer`);
-
---
 -- Indeks untuk tabel `data_barang`
 --
 ALTER TABLE `data_barang`
   ADD PRIMARY KEY (`idBarang`);
-
---
--- Indeks untuk tabel `suplier`
---
-ALTER TABLE `suplier`
-  ADD PRIMARY KEY (`idSuplier`);
 
 --
 -- Indeks untuk tabel `users`

@@ -18,9 +18,11 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $username = sanitizeInput($_POST['username']);
-        $password = !empty($_POST['password']) ? password_hash(sanitizeInput($_POST['password']), PASSWORD_DEFAULT) : $user['password'];
         $nohp = sanitizeInput($_POST['nohp']);
         $filefoto = $user['filefoto'];
+
+        $salt = bin2hex(random_bytes(16));
+        $password = !empty($_POST['password']) ? hash('sha256', $salt . sanitizeInput($_POST['password'])) : $user['password'];
 
         if (isset($_FILES['filefoto']) && $_FILES['filefoto']['error'] === UPLOAD_ERR_OK) {
             $fileTmpPath = $_FILES['filefoto']['tmp_name'];
@@ -48,8 +50,8 @@
             }
         }
 
-        $stmt = $pdo->prepare("UPDATE users SET username = ?, password = ?, nohp= ?, filefoto = ? WHERE id = ?");
-        $stmt->execute([$username, $password, $nohp, $filefoto, $_SESSION['user_id']]);
+        $stmt = $pdo->prepare("UPDATE users SET username = ?, password = ?, salt = ?, nohp = ?, filefoto = ? WHERE id = ?");
+        $stmt->execute([$username, $password, $salt, $nohp, $filefoto, $_SESSION['user_id']]);
 
         $updateSuccess = true;
     }

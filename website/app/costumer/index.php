@@ -187,9 +187,6 @@
                     <div class="recentOrders">
                         <div class="cardHeader">
                             <h2>Data Costumer</h2>
-                            <a href="input.php">
-                                <ion-icon style="font-size: 1.75rem;" name="add-circle-outline"></ion-icon>
-                            </a>
                         </div>
 
                         <?php
@@ -202,8 +199,8 @@
                             }
 
                             try {
-                                $stmt = $pdo->prepare("SELECT idCostumer, namaCostumer, nohpCostumer, alamatCostumer FROM costumer");
-                                $stmt->execute();
+                                $stmt = $pdo->prepare("SELECT id, username, nohp, alamat FROM users WHERE role = ?");
+                                $stmt->execute(['Costumer']);
 
                                 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 $no = 1;
@@ -230,11 +227,11 @@
                                     <?php foreach ($users as $user): ?>
                                         <tr>
                                             <td><?php echo $no++ ?></td>
-                                            <td><?php echo htmlspecialchars($user['namaCostumer']); ?></td>
-                                            <td><?php echo htmlspecialchars($user['nohpCostumer']); ?></td>
-                                            <td><?php echo htmlspecialchars($user['alamatCostumer']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['username']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['nohp']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['alamat']); ?></td>
                                             <td>
-                                                <a style="color: #f58f7c;" href="#" class="showDeleteModal" data-id="<?php echo htmlspecialchars($user['idCostumer']); ?>" data-nama="<?php echo htmlspecialchars($user['namaCostumer']); ?>">
+                                                <a style="color: #f58f7c;" href="#" class="showDeleteModal" data-id="<?php echo htmlspecialchars($user['id']); ?>" data-nama="<?php echo htmlspecialchars($user['username']); ?>">
                                                     <ion-icon name="trash-outline" style="font-size: 1.50rem;"></ion-icon>
                                                 </a>
                                             </td>

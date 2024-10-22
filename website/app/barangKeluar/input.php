@@ -15,7 +15,7 @@
     $modalSuccess = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $idCostumer = sanitizeInput($_POST['idCostumer']);
+        $username = sanitizeInput($_POST['username']);
         $idBarang = sanitizeInput($_POST['idBarang']);
         $qtyKeluar = sanitizeInput($_POST['qtyKeluar']);
         $jamKeluar = sanitizeInput($_POST['jamKeluar']);
@@ -29,15 +29,15 @@
 
         $jumlahQtyBarang = $nilaiQtyBarang - $qtyKeluar;
 
-        if($idCostumer=='') {
+        if($username=='') {
             $modalMessage = "Silahkan pilih costumer terlebih dahulu";
             $modalSuccess = false;
         } else if($idBarang=='') {
             $modalMessage = "Silahkan pilih barang terlebih dahulu";
             $modalSuccess = false;
         } else {
-            $stmt = $pdo->prepare("INSERT INTO barangkeluar (idKeluar, idCostumer, idBarang, qtyKeluar, tglKeluar, jamKeluar) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$id, $idCostumer, $idBarang, $qtyKeluar, $tglKeluar, $jamKeluar]);
+            $stmt = $pdo->prepare("INSERT INTO barangkeluar (idKeluar, username, idBarang, qtyKeluar, tglKeluar, jamKeluar) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$id, $username, $idBarang, $qtyKeluar, $tglKeluar, $jamKeluar]);
 
             if($stmt) {
                 $sqlUpdate = $pdo->prepare("UPDATE data_barang SET qtyBarang = ? WHERE idBarang = ?");
@@ -345,14 +345,14 @@
                                 <div class="info-container">
                                     <div class="info-item">
                                         <label class="label">Costumer</label>
-                                        <select name="idCostumer">
+                                        <select name="username">
                                             <option value="" disabled selected>--Pilih Costumer--</option>
                                             <?php
                                                 require '../../config.php';
 
                                                 try {
-                                                    $stmt = $pdo->prepare("SELECT idCostumer, namaCostumer FROM costumer");
-                                                    $stmt->execute();
+                                                    $stmt = $pdo->prepare("SELECT username FROM users WHERE role = ?");
+                                                    $stmt->execute(['Costumer']);
 
                                                     $dataCostumers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -364,7 +364,7 @@
                                             ?>
                                             <?php if ($dataCostumers): ?>
                                                 <?php foreach ($dataCostumers as $dataCostumer): ?>
-                                                    <option value="<?php echo $dataCostumer['idCostumer'] ?>"><?php echo $dataCostumer['namaCostumer'] ?></option>
+                                                    <option value="<?php echo $dataCostumer['username'] ?>"><?php echo $dataCostumer['username'] ?></option>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>

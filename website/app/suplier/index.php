@@ -187,9 +187,6 @@
                     <div class="recentOrders">
                         <div class="cardHeader">
                             <h2>Data Suplier</h2>
-                            <a href="input.php">
-                                <ion-icon style="font-size: 1.75rem;" name="add-circle-outline"></ion-icon>
-                            </a>
                         </div>
 
                         <?php
@@ -202,8 +199,8 @@
                             }
 
                             try {
-                                $stmt = $pdo->prepare("SELECT idSuplier, namaSuplier, kontakSuplier, alamatSuplier FROM suplier");
-                                $stmt->execute();
+                                $stmt = $pdo->prepare("SELECT id, username, nohp, alamat FROM users WHERE role = ?");
+                                $stmt->execute(['Supplier']);
 
                                 $supliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 $no = 1;
@@ -230,11 +227,11 @@
                                     <?php foreach ($supliers as $suplier): ?>
                                         <tr>
                                             <td><?php echo $no++ ?></td>
-                                            <td><?php echo htmlspecialchars($suplier['namaSuplier']); ?></td>
-                                            <td><?php echo htmlspecialchars($suplier['kontakSuplier']); ?></td>
-                                            <td><?php echo htmlspecialchars($suplier['alamatSuplier']); ?></td>
+                                            <td><?php echo htmlspecialchars($suplier['username']); ?></td>
+                                            <td><?php echo htmlspecialchars($suplier['nohp']); ?></td>
+                                            <td><?php echo htmlspecialchars($suplier['alamat']); ?></td>
                                             <td>
-                                                <a style="color: #f58f7c;" href="#" class="showDeleteModal" data-id="<?php echo htmlspecialchars($suplier['idSuplier']); ?>" data-nama="<?php echo htmlspecialchars($suplier['namaSuplier']); ?>">
+                                                <a style="color: #f58f7c;" href="#" class="showDeleteModal" data-id="<?php echo htmlspecialchars($suplier['id']); ?>" data-nama="<?php echo htmlspecialchars($suplier['username']); ?>">
                                                     <ion-icon name="trash-outline" style="font-size: 1.50rem;"></ion-icon>
                                                 </a>
                                             </td>

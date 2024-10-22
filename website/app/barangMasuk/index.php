@@ -228,7 +228,7 @@
                             }
 
                             try {
-                                $stmt = $pdo->prepare("SELECT * FROM data_barang INNER JOIN barangmasuk ON data_barang.idBarang = barangmasuk.idBarang INNER JOIN suplier ON barangmasuk.idSuplier = suplier.idSuplier");
+                                $stmt = $pdo->prepare("SELECT * FROM data_barang INNER JOIN barangmasuk ON data_barang.idBarang = barangmasuk.idBarang INNER JOIN users ON barangmasuk.username = users.username");
                                 $stmt->execute();
 
                                 $dataMasuks = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -259,7 +259,7 @@
                                         <tr>
                                             <td><?php echo $no++ ?></td>
                                             <td><?php echo htmlspecialchars($masuk['namaBarang']); ?></td>
-                                            <td><?php echo htmlspecialchars($masuk['namaSuplier']); ?></td>
+                                            <td><?php echo htmlspecialchars($masuk['username']); ?></td>
                                             <td><?php echo htmlspecialchars($masuk['qtyMasuk']); ?></td>
                                             <td><?php echo htmlspecialchars(date('d-m-Y', strtotime($masuk['tglMasuk']))); ?></td>
                                             <td><?php echo htmlspecialchars($masuk['jamMasuk']); ?></td>

@@ -344,7 +344,8 @@
                                                 require '../../config.php';
 
                                                 try {
-                                                    $stmt = $pdo->prepare("SELECT idSuplier, namaSuplier FROM suplier");
+                                                    $stmt = $pdo->prepare("SELECT username FROM users WHERE role = ?");
+                                                    $stmt->execute(['Supplier']);
                                                     $stmt->execute();
 
                                                     $dataSupliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -357,7 +358,7 @@
                                             ?>
                                             <?php if ($dataSupliers): ?>
                                                 <?php foreach ($dataSupliers as $dataSuplier): ?>
-                                                    <option value="<?php echo $dataSuplier['idSuplier'] ?>"><?php echo $dataSuplier['namaSuplier'] ?></option>
+                                                    <option value="<?php echo $dataSuplier['username'] ?>"><?php echo $dataSuplier['username'] ?></option>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>

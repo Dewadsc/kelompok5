@@ -240,8 +240,8 @@
                             require '../../config.php';
 
                             try {
-                                $perintahCostumer = $pdo->prepare("SELECT idCostumer, namaCostumer, nohpCostumer, alamatCostumer FROM costumer");
-                                $perintahCostumer->execute();
+                                $perintahCostumer = $pdo->prepare("SELECT username, nohp FROM users WHERE role = ?");
+                                $perintahCostumer->execute(['Costumer']);
 
                                 $costumers = $perintahCostumer->fetchAll(PDO::FETCH_ASSOC);
                                 $no = 1;
@@ -258,7 +258,7 @@
                                 <?php foreach ($costumers as $costumer): ?>
                                     <tr>
                                         <td>
-                                            <h4><?php echo htmlspecialchars($costumer['namaCostumer']); ?> <br> <span><?php echo htmlspecialchars($costumer['nohpCostumer']); ?></span></h4>
+                                            <h4><?php echo htmlspecialchars($costumer['username']); ?> <br> <span><?php echo htmlspecialchars($costumer['nohp']); ?></span></h4>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

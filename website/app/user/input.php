@@ -15,19 +15,28 @@
     $modalSuccess = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = sanitizeInput($_POST['username']);
-        $nohp = sanitizeInput($_POST['nohp']);
         $id = rand(1, 9999);
-        $password = password_hash(sanitizeInput($_POST['password']), PASSWORD_DEFAULT);
+        $username = sanitizeInput($_POST['username']);
+        $password = sanitizeInput($_POST['password']);
+        $nohp = sanitizeInput($_POST['nohp']);
+        $alamat = sanitizeInput($_POST['alamat']);
+        $role = sanitizeInput($_POST['role']);
+
+        if (empty($username) || empty($password) || empty($nohp) || empty($alamat) || empty($role)) {
+            die('Semua field harus diisi!');
+        }
 
         if (!validateCsrfToken($_POST['csrf_token'])) {
             die('CSRF token validation failed');
         }
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        $usernameExists = $stmt->fetchColumn();
+        $salt = bin2hex(random_bytes(16));
+        $hashedPassword = hash('sha256', $salt . $password);
+
+        $stmt1 = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+        $stmt1->bindParam(':username', $username);
+        $stmt1->execute();
+        $usernameExists = $stmt1->fetchColumn();
 
         if ($usernameExists > 0) {
             $modalMessage = "Username sudah digunakan, silakan pilih username lain.";
@@ -64,8 +73,8 @@
                 $modalMessage = "Maaf, file tidak ter-upload.";
             } else {
                 if (move_uploaded_file($_FILES["filefoto"]["tmp_name"], $targetFile)) {
-                    $stmt = $pdo->prepare("INSERT INTO users (id, username, password, nohp, filefoto) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$id, $username, $password, $nohp, $newFileName]);
+                    $stmt = $pdo->prepare("INSERT INTO users (id, username, password, nohp, filefoto, alamat, role, salt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$id, $username, $hashedPassword, $nohp, $newFileName, $alamat, $role, $salt]);
                     $modalSuccess = true;
                     $modalMessage = "Pengguna berhasil ditambahkan.";
                 } else {
@@ -155,7 +164,9 @@
             }
             input[type="text"],
             input[type="password"],
-            input[type="file"] {
+            input[type="file"],
+            textarea,
+            select {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #2a2185;
@@ -167,7 +178,9 @@
             }
             input[type="text"]:focus,
             input[type="password"]:focus,
-            input[type="file"]:focus {
+            input[type="file"]:focus,
+            textarea:focus,
+            select:focus {
                 border-color: #1e1a6d;
                 background-color: #e6f0ff;
             }
@@ -378,6 +391,19 @@
                                         <label class="label">No Telp</label>
                                         <input type="text" name="nohp" inputmode="numeric" required placeholder="No HP">
                                         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="label">Alamat</label>
+                                        <textarea name="alamat" style="resize: none; height: 100px;" placeholder="Alamat"></textarea>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="label">Role</label>
+                                        <select name="role" required>
+                                            <option value="" disabled selected>--Pilih Role--</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="Costumer">Costumer</option>
+                                            <option value="Supplier">Supplier</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <center>

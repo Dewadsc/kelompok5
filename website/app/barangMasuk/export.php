@@ -5,7 +5,7 @@
     header('Content-Disposition: attachment; filename="data-barang-masuk.xls"');
 
     try {
-        $stmt = $pdo->prepare("SELECT * FROM data_barang INNER JOIN barangmasuk ON data_barang.idBarang = barangmasuk.idBarang INNER JOIN suplier ON barangmasuk.idSuplier = suplier.idSuplier");
+        $stmt = $pdo->prepare("SELECT * FROM data_barang INNER JOIN barangmasuk ON data_barang.idBarang = barangmasuk.idBarang INNER JOIN userus ON barangmasuk.username = userus.username");
         $stmt->execute();
 
         $dataMasuks = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -38,7 +38,7 @@
                 <tr>
                     <td>" . $no++ . "</td>
                     <td>" . htmlspecialchars($masuk['namaBarang']) . "</td>
-                    <td>" . htmlspecialchars($masuk['namaSuplier']) . "</td>
+                    <td>" . htmlspecialchars($masuk['username']) . "</td>
                     <td>" . htmlspecialchars($masuk['qtyMasuk']) . "</td>
                     <td>" . htmlspecialchars(date('d-m-Y', strtotime($masuk['tglMasuk']))) . "</td>
                     <td>" . htmlspecialchars($masuk['jamMasuk']) . "</td>

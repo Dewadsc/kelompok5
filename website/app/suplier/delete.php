@@ -5,7 +5,7 @@
     if (isset($_GET['id'])) {
         $suplierId = $_GET['id'];
         try {
-            $stmt = $pdo->prepare("DELETE FROM suplier WHERE idSuplier = :id");
+            $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
             $stmt->bindParam(':id', $suplierId);
             $stmt->execute();
 

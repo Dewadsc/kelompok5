@@ -5,7 +5,7 @@
     if (isset($_GET['id'])) {
         $userId = $_GET['id'];
         try {
-            $stmt = $pdo->prepare("DELETE FROM costumer WHERE idCostumer = :id");
+            $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
             $stmt->bindParam(':id', $userId);
             $stmt->execute();
 
