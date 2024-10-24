@@ -31,6 +31,14 @@
                 overflow: auto; 
                 background-color: rgba(0, 0, 0, 0.5);
             }
+            #navigation::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            #navigation::-webkit-scrollbar-thumb {
+                background-color: #999;
+                border-radius: 10px;
+            }
 
             .modal-content {
                 background-color: #fefefe;
@@ -85,7 +93,7 @@
 
     <body>
         <div class="container">
-            <div class="navigation">
+            <div class="navigation" style="overflow-y: auto;" id="navigation">
                 <ul>
                     <li>
                         <a href="#">

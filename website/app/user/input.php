@@ -103,6 +103,14 @@
                 margin: 0;
                 padding: 0;
             }
+            #navigation::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            #navigation::-webkit-scrollbar-thumb {
+                background-color: #999;
+                border-radius: 10px;
+            }
             .details {
                 display: flex;
                 justify-content: center;
@@ -265,7 +273,7 @@
 
     <body>
         <div class="container">
-            <div class="navigation">
+            <div class="navigation" style="overflow-y: auto;" id="navigation">
                 <ul>
                     <li>
                         <a href="#">

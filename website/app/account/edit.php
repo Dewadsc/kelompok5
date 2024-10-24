@@ -21,8 +21,13 @@
         $nohp = sanitizeInput($_POST['nohp']);
         $filefoto = $user['filefoto'];
 
-        $salt = bin2hex(random_bytes(16));
-        $password = !empty($_POST['password']) ? hash('sha256', $salt . sanitizeInput($_POST['password'])) : $user['password'];
+        if (!empty($_POST['password'])) {
+            $salt = bin2hex(random_bytes(16));
+            $password = hash('sha256', $salt . sanitizeInput($_POST['password']));
+        } else {
+            $password = $user['password'];
+            $salt = $user['salt'];
+        }
 
         if (isset($_FILES['filefoto']) && $_FILES['filefoto']['error'] === UPLOAD_ERR_OK) {
             $fileTmpPath = $_FILES['filefoto']['tmp_name'];
@@ -72,6 +77,14 @@
                 background-color: #f4f4f4;
                 margin: 0;
                 padding: 0;
+            }
+            #navigation::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            #navigation::-webkit-scrollbar-thumb {
+                background-color: #999;
+                border-radius: 10px;
             }
             .details {
                 display: flex;
@@ -225,7 +238,7 @@
 
     <body>
         <div class="container">
-            <div class="navigation">
+            <div class="navigation" >
                 <ul>
                     <li>
                         <a href="#">
